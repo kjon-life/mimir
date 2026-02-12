@@ -1,35 +1,39 @@
-const API_URL = "http://localhost:8400";
+import type { BoardData, Project, Agent, ActivityEvent } from "./types";
 
-async function fetchAPI<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
-  const url = new URL(`${API_URL}${endpoint}`);
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8400";
+
+async function fetchApi<T>(path: string, params?: Record<string, string>): Promise<T> {
+  const url = new URL(path, API_BASE);
   if (params) {
     Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   }
   const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  if (!res.ok) throw new Error(`API error: ${res.status} ${res.statusText}`);
   return res.json();
 }
 
 export const api = {
-  getProjects: () => fetchAPI<import("./types").Project[]>("/api/projects"),
-  getBoard: (project = "all") =>
-    fetchAPI<import("./types").BoardData>("/api/board", { project }),
-  getAgents: () => fetchAPI<import("./types").Agent[]>("/api/agents"),
-  getActivity: (limit = 50, after?: string) => {
-    const params: Record<string, string> = { limit: String(limit) };
-    if (after) params.after = after;
-    return fetchAPI<import("./types").ActivityEvent[]>("/api/activity", params);
-  },
+  getProjects: () => fetchApi<Project[]>("/api/projects"),
+  getBoard: (project: string) =>
+    fetchApi<BoardData>("/api/board", { project }),
+  getAgents: () => fetchApi<Agent[]>("/api/agents"),
+  getActivity: (limit: number) =>
+    fetchApi<ActivityEvent[]>("/api/activity", { limit: String(limit) }),
 };
 
-export function createSSE(onEvent: (type: string) => void): EventSource | null {
-  try {
-    const es = new EventSource(`${API_URL}/api/sse`);
-    es.addEventListener("board_updated", () => onEvent("board_updated"));
-    es.addEventListener("agent_changed", () => onEvent("agent_changed"));
-    es.addEventListener("activity_new", () => onEvent("activity_new"));
-    return es;
-  } catch {
-    return null;
-  }
+export type SSEEventType = "board_updated" | "agent_changed" | "activity_new";
+
+/** Create EventSource for SSE and call onEvent for each event. */
+export function createSSE(onEvent: (type: SSEEventType) => void): EventSource {
+  const es = new EventSource(`${API_BASE}/api/sse`);
+  es.addEventListener("board_updated", () => onEvent("board_updated"));
+  es.addEventListener("agent_changed", () => onEvent("agent_changed"));
+  es.addEventListener("activity_new", () => onEvent("activity_new"));
+  es.onmessage = (e) => {
+    const type = (e.type || "board_updated") as SSEEventType;
+    if (["board_updated", "agent_changed", "activity_new"].includes(type)) {
+      onEvent(type);
+    }
+  };
+  return es;
 }

@@ -1,32 +1,33 @@
-// Types for the Mimir dashboard
-
+/** Project from /api/projects */
 export interface Project {
   id: string;
   name: string;
   path: string;
   branch_name: string;
   description: string;
-  total_stories: number;
-  done_stories: number;
-  last_synced: string;
+  total_stories: number | null;
+  done_stories: number | null;
+  last_synced: string | null;
 }
 
+/** Task from board columns */
 export interface Task {
   id: string;
   project_id: string;
   project_name: string;
   story_id: string;
   title: string;
-  description?: string;
-  status: "backlog" | "in_progress" | "blocked" | "done";
+  description: string;
+  status: string;
   domain: string;
   complexity: string;
   blocked_reason: string | null;
   assigned_agent: string | null;
   priority: number;
-  updated_at?: string;
+  updated_at: string;
 }
 
+/** Board response from /api/board */
 export interface BoardData {
   columns: {
     backlog: Task[];
@@ -38,6 +39,7 @@ export interface BoardData {
   done_count: number;
 }
 
+/** Agent from /api/agents */
 export interface Agent {
   name: string;
   project_id: string;
@@ -47,14 +49,14 @@ export interface Agent {
   since: string;
 }
 
+/** Activity event from /api/activity */
 export interface ActivityEvent {
-  id: number;
+  id?: number;
   project_id: string;
   project_name: string;
-  event_type: "story_completed" | "gate_failed" | "agent_started" | "prd_updated";
+  event_type: string;
   story_id: string;
-  agent_name: string;
+  agent_name: string | null;
   summary: string;
-  metadata: string;
   timestamp: string;
 }

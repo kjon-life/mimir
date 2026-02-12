@@ -83,10 +83,10 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # CORS for Next.js dev server
+    # CORS for frontend dev server (Vite default: 8080)
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3400", "http://localhost:3000"],
+        allow_origins=["http://localhost:3400", "http://localhost:3000", "http://localhost:8080", "http://[::]:8080"],
         allow_methods=["GET"],
         allow_headers=["*"],
     )

@@ -61,22 +61,112 @@ The etymology tells you what the myth confirms: this is about **unbroken remembr
 ### Setup
 
 ```sh
-# API dependencies
+# API + frontend dependencies
 make setup
-
-# Frontend dependencies
-cd mimir && npm install
 ```
 
 ### Run
 
 ```sh
-# API server (serves the Mission Control API)
+# Terminal 1: API server (port 8400)
 make api
 
-# Frontend (in a separate terminal)
-cd mimir && npm run dev
+# Terminal 2: Frontend (port 8080)
+make web
 ```
+
+---
+
+## Step-by-step: Running Mimir Locally for Multiple Projects
+
+### 1. Ensure Ullr is available
+
+Mimir depends on Ullr (the autonomous builder). Ullr must be a sibling of Mimir:
+
+```
+.../Dev/utils/
+├── ullr/     ← required
+└── mimir/
+```
+
+If Ullr lives elsewhere, edit `api/pyproject.toml` and change the path:
+
+```toml
+[tool.uv.sources]
+ullr = { path = "/path/to/your/ullr", editable = true }
+```
+
+### 2. Install dependencies
+
+From the Mimir repo root:
+
+```sh
+make setup
+```
+
+This runs `uv sync` in `api/` and `npm install` in `web/`.
+
+### 3. Configure which directories to scan
+
+Edit `mimir.yaml` at the repo root. The `watch_paths` list tells Mimir where to look for Ullr projects (directories containing `ullr.yaml`):
+
+```yaml
+watch_paths:
+  - /Users/trust/Dev
+  - /Users/trust/Dev/utils
+max_depth: 3
+```
+
+Add any directory trees that contain your Ullr projects. `max_depth` limits how deep Mimir recurses to avoid scanning huge trees.
+
+### 4. Start the API server
+
+```sh
+make api
+```
+
+The API runs at **http://localhost:8400**. It will:
+
+- Discover all Ullr projects under `watch_paths`
+- Ingest `taskboard.json`, `prd.json`, and `progress.jsonl` into SQLite
+- Watch for file changes and re-ingest when you edit those files
+
+### 5. Start the frontend
+
+In a second terminal:
+
+```sh
+make web
+```
+
+The dashboard runs at **http://localhost:8080**. Open it in your browser.
+
+### 6. Add Ullr projects to be monitored
+
+For Mimir to see a project, it must have an `ullr.yaml` at its root. Initialize with Ullr:
+
+```sh
+cd /path/to/your/project
+ullr init
+```
+
+This creates `ullr.yaml` and a `taskboard.json` skeleton. Once those files exist under a `watch_path`, Mimir will pick them up on the next scan (or when you save a change).
+
+### 7. View multiple projects
+
+- **Projects** (`/`) — Kanban board. Use the project filter to view one project or "All" for everything.
+- **Agents** (`/agents`) — Active agents inferred from in-progress tasks.
+- **Activity** (`/activity`) — Recent events from all projects.
+
+### 8. Optional: Customize API URL
+
+If the API runs on a different host or port, set:
+
+```sh
+export VITE_API_URL=http://localhost:8400
+```
+
+before `make web`, or add it to a `.env` file in `web/`.
 
 ## Project Structure
 

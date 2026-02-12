@@ -1,41 +1,47 @@
-// Deterministic color mapping for project names
-
-const BADGE_COLORS = [
-  { bg: "173 58% 39%", fg: "173 58% 90%" },  // teal
-  { bg: "142 50% 40%", fg: "142 50% 90%" },  // green
-  { bg: "25 85% 50%", fg: "25 85% 95%" },     // orange
-  { bg: "262 60% 55%", fg: "262 60% 92%" },   // purple
-  { bg: "210 70% 50%", fg: "210 70% 92%" },   // blue
-  { bg: "330 65% 55%", fg: "330 65% 92%" },   // pink
-  { bg: "45 85% 50%", fg: "45 85% 10%" },     // yellow
-  { bg: "0 65% 50%", fg: "0 65% 92%" },       // red
+/** Deterministic color palette for project badges (HSL). */
+const PROJECT_COLORS = [
+  { bg: 220, fg: 210 }, // blue
+  { bg: 160, fg: 150 }, // green
+  { bg: 280, fg: 270 }, // purple
+  { bg: 30, fg: 45 }, // orange
+  { bg: 340, fg: 330 }, // pink
+  { bg: 180, fg: 170 }, // cyan
+  { bg: 45, fg: 50 }, // yellow/amber
+  { bg: 320, fg: 310 }, // magenta
+  { bg: 200, fg: 190 }, // teal
+  { bg: 15, fg: 25 }, // red-orange
 ] as const;
 
-function hashString(str: string): number {
-  let hash = 0;
+/** Simple hash of string to number. */
+function hash(str: string): number {
+  let h = 0;
   for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+    h = (h << 5) - h + str.charCodeAt(i);
+    h |= 0;
   }
-  return Math.abs(hash);
+  return Math.abs(h);
 }
 
-export function getProjectColor(projectName: string) {
-  const idx = hashString(projectName) % BADGE_COLORS.length;
-  return BADGE_COLORS[idx];
+/** Get deterministic color for a project name. */
+export function getProjectColor(name: string): { bg: number; fg: number } {
+  const idx = hash(name) % PROJECT_COLORS.length;
+  return PROJECT_COLORS[idx];
 }
 
-export function formatRelativeTime(dateStr: string): string {
-  const now = Date.now();
-  const then = new Date(dateStr).getTime();
-  const diff = now - then;
+/** Format ISO timestamp as relative time (e.g. "2 hours ago"). */
+export function formatRelativeTime(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  const date = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
 
-  const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes}m ago`;
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  if (diffSec < 60) return "just now";
+  if (diffMin < 60) return `${diffMin}m ago`;
+  if (diffHour < 24) return `${diffHour}h ago`;
+  if (diffDay < 7) return `${diffDay}d ago`;
+  return date.toLocaleDateString();
 }
