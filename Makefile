@@ -3,13 +3,18 @@
 # Run both API and frontend dev servers
 dev: api
 
-# API server only (frontend via Lovable or separate terminal)
+# API server
 api:
 	cd api && uv run mimir-api
+
+# Frontend dev server
+web:
+	cd web && npm run dev
 
 # Install dependencies
 setup:
 	cd api && uv sync --python 3.11
+	cd web && npm install
 
 # Generate OpenAPI spec to mimir/openapi.json
 openapi:
