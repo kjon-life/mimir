@@ -18,6 +18,7 @@ ullr = { path = "../../ullr", editable = true }
 
 [project.scripts]
 mimir-api = "mimir_api.app:main"
+mimir-openapi = "mimir_api.openapi:generate"
 
 [build-system]
 requires = ["hatchling"]

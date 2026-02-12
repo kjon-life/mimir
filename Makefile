@@ -1,4 +1,4 @@
-.PHONY: dev api web setup lint
+.PHONY: dev api web setup lint openapi
 
 # Run both API and frontend dev servers
 dev: api
@@ -10,6 +10,10 @@ api:
 # Install dependencies
 setup:
 	cd api && uv sync --python 3.11
+
+# Generate OpenAPI spec to mimir/openapi.json
+openapi:
+	cd api && uv run mimir-openapi
 
 # Lint
 lint:
