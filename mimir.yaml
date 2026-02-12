@@ -1,0 +1,18 @@
+# Mimir — Mission Control configuration
+# Directories to scan for ullr.yaml files
+watch_paths:
+  - /Users/trust/Dev
+  - /Users/trust/Dev/utils
+
+# How deep to recurse looking for ullr.yaml
+max_depth: 3
+
+# Polling interval when watchdog isn't available (e.g. Railway)
+poll_interval_seconds: 30
+
+# API server
+api_port: 8400
+db_path: ./mimir.db
+
+# Frontend
+next_port: 3400

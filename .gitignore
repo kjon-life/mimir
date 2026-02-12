@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.venv/
+mimir.db
+node_modules/
+.next/
+.env
+.env.local
