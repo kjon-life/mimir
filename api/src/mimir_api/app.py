@@ -5,8 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from contextlib import asynccontextmanager
-from pathlib import Path
-from typing import AsyncGenerator
+from typing import TYPE_CHECKING
 
 import uvicorn
 from fastapi import FastAPI
@@ -20,6 +19,10 @@ from mimir_api.ingestion import ingest_all, ingest_project
 from mimir_api.routes import activity, agents, projects
 from mimir_api.sse import EventBus
 from mimir_api.watcher import ProjectWatcher
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+    from pathlib import Path
 
 logger = logging.getLogger(__name__)
 

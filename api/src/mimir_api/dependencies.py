@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from mimir_api.db import Database
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mimir_api.db import Database
 
 # Module-level singleton, set during app lifespan
 _db: Database | None = None

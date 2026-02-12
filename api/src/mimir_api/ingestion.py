@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from mimir_api.db import Database
+if TYPE_CHECKING:
+    from mimir_api.db import Database
 
 
 async def discover_projects(watch_paths: list[Path], max_depth: int = 3) -> list[dict[str, str]]:
@@ -44,10 +46,12 @@ def _scan_directory(
 
     config_file = directory / "ullr.yaml"
     if config_file.exists():
-        results.append({
-            "path": str(directory),
-            "config_path": str(config_file),
-        })
+        results.append(
+            {
+                "path": str(directory),
+                "config_path": str(config_file),
+            }
+        )
         return  # Don't recurse into Ullr projects
 
     try:
@@ -216,4 +220,4 @@ async def ingest_all(db: Database, watch_paths: list[Path], max_depth: int = 3) 
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()

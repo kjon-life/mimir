@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING
 
-from watchdog.events import FileSystemEventHandler, FileSystemEvent
+from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
+
+if TYPE_CHECKING:
+    import asyncio
+    from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 

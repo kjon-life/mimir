@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import aiosqlite
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS projects (

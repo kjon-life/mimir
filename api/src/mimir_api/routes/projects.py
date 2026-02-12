@@ -16,7 +16,8 @@ async def list_projects() -> list[dict[str, Any]]:
     """List all discovered Ullr projects with story counts."""
     db = get_db()
     cursor = await db.conn.execute(
-        "SELECT id, name, path, branch_name, description, total_stories, done_stories, last_synced FROM projects ORDER BY name"
+        "SELECT id, name, path, branch_name, description, total_stories, done_stories, last_synced "
+        "FROM projects ORDER BY name"
     )
     rows = await cursor.fetchall()
     return [dict(row) for row in rows]
@@ -27,7 +28,8 @@ async def get_project(project_id: str) -> dict[str, Any]:
     """Get a single project's details."""
     db = get_db()
     cursor = await db.conn.execute(
-        "SELECT id, name, path, branch_name, description, total_stories, done_stories, last_synced FROM projects WHERE id = ?",
+        "SELECT id, name, path, branch_name, description, total_stories, done_stories, last_synced "
+        "FROM projects WHERE id = ?",
         (project_id,),
     )
     row = await cursor.fetchone()
