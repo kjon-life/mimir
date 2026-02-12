@@ -1,0 +1,40 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Mimir
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: k
+    family-names: jon
+    email: 76539355+kjon-life@users.noreply.github.com
+    affiliation: Founder
+    orcid: 'https://orcid.org/0009-0008-2892-3049'  # Optional - remove if you don't have one
+identifiers:
+  - type: url
+    value: 'https://github.com/kjon-life/mimir'
+repository-code: 'https://github.com/kjon-life/mimir'
+url: 'https://github.com/kjon-life/mimir'
+abstract: >-
+  Mission Control API for Ullr. Mímir is the dashboard and API 
+  for observing, retaining, and surfacing patterns from a 
+  development workflow. Provides a unified view across 
+  all Ullr projects — Kanban board, agent monitoring, 
+  and activity feed.
+keywords:
+  - Mission Control
+  - Ullr
+  - dashboard
+  - Kanban
+  - agent monitoring
+  - activity feed
+  - FastAPI
+  - React
+  - development workflow
+  - SSE
+license: All-Rights-Reserved
+version: 0.0.1
+date-released: '2026-02-12'

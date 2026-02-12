@@ -1,12 +1,15 @@
 # Mímir
 
+<img src="web/public/hero.png" alt="Mímir's Well" width="380" align="right">
+
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
 [![Python](https://img.shields.io/badge/Python-3.11+-green.svg)](https://www.python.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB.svg)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF.svg)](https://vitejs.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
 
-**Mission Control API for Ullr.** A dashboard and API for observing, retaining, and surfacing patterns from your development workflow.
+**Mission Control API for Ullr.** A dashboard and API for observing, retaining, and surfacing patterns from the development workflow.
 
 ---
 
@@ -84,3 +87,9 @@ mimir/
 ├── openapi.json  # API spec (generated via make openapi)
 └── Makefile      # Commands for dev, setup, lint
 ```
+
+## License
+
+Copyright (c) 2026 k jon. All Rights Reserved.
+
+See [LICENSE](LICENSE) for details.

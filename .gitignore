@@ -1,11 +1,89 @@
+# Python
 __pycache__/
 *.py[cod]
-*.egg-info/
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
 dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 .venv/
-mimir.db
+venv/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Node / npm
 node_modules/
-.next/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm/
+.eslintcache
+
+# Vite / React build
+dist/
+dist-ssr/
+*.local
+
+# Environment
 .env
 .env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+mimir.db
+
+# IDE / Editor
+.idea/
+.vscode/
 *.code-workspace
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+
+# Logs
+*.log
+logs/
+
+# Debug
+*.stackdump
+*.core
+
+# Temporary
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
