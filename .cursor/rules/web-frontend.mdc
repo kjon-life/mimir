@@ -1,0 +1,38 @@
+---
+description: React frontend patterns and conventions
+globs: web/**/*.ts, web/**/*.tsx
+alwaysApply: false
+---
+
+# Web Frontend (web/)
+
+## Tech Stack
+
+Vite 5, React 18, TypeScript 5.8, Tailwind CSS, shadcn/ui, React Query, react-router-dom, Lucide icons.
+
+## Structure
+
+```
+web/src/
+├── lib/          # api.ts (fetch + SSE), types.ts, colors.ts, utils.ts
+├── hooks/        # use-api.ts (React Query + SSE), use-mobile, use-toast
+├── pages/        # Index, Agents, Activity, NotFound
+├── components/
+│   ├── layout/   # AppSidebar, DashboardLayout, Header
+│   ├── board/    # KanbanColumn, TaskCard, ProjectBadge
+│   └── ui/       # shadcn primitives (don't edit unless necessary)
+├── index.css     # Tailwind + CSS vars; @import must be first
+└── App.tsx       # QueryClient, Router, routes
+```
+
+## Conventions
+
+- **Data fetching** — React Query via `useProjects`, `useBoard`, `useAgents`, `useActivity` from `hooks/use-api.ts`. 30s polling; SSE invalidates on `board_updated`, `agent_changed`, `activity_new`.
+- **API client** — `lib/api.ts`; base URL from `VITE_API_URL` or `http://localhost:8400`.
+- **Types** — `lib/types.ts` mirrors API shapes (Project, Task, BoardData, Agent, ActivityEvent).
+- **Styling** — Tailwind + CSS vars in `index.css`. Use `cn()` from `lib/utils` for conditional classes. Dark theme; tokens: `--surface`, `--status-active`, etc.
+- **New pages** — Add route in `App.tsx`; use `DashboardLayout` for sidebar + SSE; add NavLink in `AppSidebar`.
+
+## Path Aliases
+
+`@/` → `src/` (e.g. `@/lib/api`, `@/components/ui`).

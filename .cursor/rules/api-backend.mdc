@@ -1,0 +1,38 @@
+---
+description: FastAPI backend patterns and conventions
+globs: api/**/*.py
+alwaysApply: false
+---
+
+# API Backend (api/)
+
+## Tech Stack
+
+Python 3.11, FastAPI, aiosqlite, watchdog, sse-starlette, PyYAML. Use `uv` for dependencies.
+
+## Module Layout
+
+| Module | Responsibility |
+|--------|----------------|
+| `app.py` | FastAPI app, lifespan (DB, ingestion, watcher), CORS, routes |
+| `config.py` | Load mimir.yaml via Pydantic; walks up from CWD to find config |
+| `db.py` | Async SQLite, schema, `Database` class |
+| `dependencies.py` | `get_db()` / `set_db()` — global DB for route handlers |
+| `ingestion.py` | Discover projects, ingest taskboard/PRD/progress into SQLite |
+| `watcher.py` | Watchdog observer; re-ingest on ullr.yaml, taskboard.json, prd.json, progress.jsonl |
+| `sse.py` | EventBus pub/sub for live updates |
+| `routes/` | projects, agents, activity — prefix `/api`, use `get_db()` |
+
+## Conventions
+
+- **Async everywhere** — Routes, ingestion, DB access.
+- **No Pydantic response models** — Routes return `dict[str, Any]` or `list[dict]` from `dict(row)`.
+- **DB access** — `db = get_db()`; `cursor = await db.conn.execute(...)`; `rows = await cursor.fetchall()`.
+- **Logging** — `logging.getLogger(__name__)`; use `logger.info`, `logger.exception`.
+- **Config** — `load_config()` from `config.py`; paths are `Path` objects.
+- **New routes** — Add router in `app.py`; keep prefix `/api`, tags for OpenAPI.
+
+## Quality
+
+- `uv run ruff check src/` and `uv run ruff format --check src/`
+- `uv run mypy .` (strict); ullr overrides `ignore_missing_imports`

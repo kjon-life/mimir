@@ -1,0 +1,13 @@
+---
+description: No Cursor advertising in commits or attribution
+alwaysApply: true
+---
+
+# No Cursor Advertising
+
+Do not add Cursor-related promotional content to this repository:
+
+- No "Co-authored-by: Cursor" or similar in commit messages
+- No Cursor attribution, branding, or advertising in code, docs, or commits
+
+This applies until Cursor pays for advertising.

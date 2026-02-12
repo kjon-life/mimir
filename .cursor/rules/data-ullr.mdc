@@ -1,0 +1,44 @@
+---
+description: Ullr data formats, schema, and config
+globs: api/**/ingestion.py, api/**/db.py, api/**/config.py, mimir.yaml
+alwaysApply: false
+---
+
+# Data Layer — Ullr Integration
+
+## Ullr Project Files
+
+Mimir discovers projects by scanning `watch_paths` for directories containing `ullr.yaml`. Per project:
+
+| File | Purpose |
+|------|---------|
+| `ullr.yaml` | Project name, branch_prefix, description |
+| `taskboard.json` | Kanban columns: `backlog`, `in_progress`, `blocked`, `done` |
+| `prd.json` | `userStories`; `passes: true` = done |
+| `progress.jsonl` | Append-only events; `timestamp`, `event_type`, `agent`, `summary` |
+
+## DB Schema (db.py)
+
+- **projects** — id (slug), name, path, branch_name, description, total_stories, done_stories, last_synced
+- **tasks** — id, project_id, story_id, title, status, domain, complexity, blocked_reason, assigned_agent, priority, updated_at
+- **activity** — id, project_id, event_type, story_id, agent_name, summary, metadata (JSON), timestamp
+
+## Config (mimir.yaml)
+
+```yaml
+watch_paths: [Path, ...]   # Directories to scan
+max_depth: 3
+poll_interval_seconds: 30
+api_port: 8400
+db_path: ./mimir.db
+next_port: 3400
+```
+
+Config is discovered by walking upward from CWD. Defaults apply if no `mimir.yaml` found.
+
+## Ingestion Rules
+
+- Project id = slugified project name from `ullr.yaml`
+- Task status maps to `taskboard.json` column keys
+- Progress deduplication: skip entries with `timestamp <= last_ts` per project
+- On file change: `ingest_project` for that project; publish `board_updated` to SSE

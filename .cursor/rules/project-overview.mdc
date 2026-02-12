@@ -1,0 +1,37 @@
+---
+description: Mimir architecture and monorepo structure
+alwaysApply: true
+---
+
+# Mimir — Project Overview
+
+**Mission Control API for Ullr.** Read-only dashboard and API for observing, retaining, and surfacing patterns from the development workflow. Mimir does not modify Ullr project files.
+
+## Monorepo Structure
+
+```
+mimir/
+├── api/          # FastAPI backend (Python 3.11, uv)
+├── web/          # Vite + React frontend (npm)
+├── mimir.yaml    # Config (watch_paths, ports, db_path)
+├── openapi.json  # Generated via make openapi
+└── Makefile      # setup, api, web, lint, openapi
+```
+
+## Key Dependencies
+
+- **Ullr** — Path dependency in `api/pyproject.toml`. Must be sibling at `../../ullr` or path updated. Mimir ingests Ullr's `ullr.yaml`, `taskboard.json`, `prd.json`, `progress.jsonl`.
+
+## Data Flow
+
+Ullr projects write JSON → Mimir watcher detects changes → ingestion upserts SQLite → REST + SSE API → frontend polls + SSE for live updates.
+
+## Commands
+
+| Command | Purpose |
+|--------|---------|
+| `make setup` | Install api (uv) + web (npm) deps |
+| `make api` | Start API on :8400 |
+| `make web` | Start frontend on :8080 |
+| `make openapi` | Regenerate openapi.json |
+| `make lint` | Ruff check + format on api/ |
